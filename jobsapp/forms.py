@@ -6,6 +6,7 @@ from jobsapp.models import Job, Applicant
 class CreateJobForm(forms.ModelForm):
     class Meta:
         model = Job
+        include=('experience')
         exclude = ('user', 'created_at',)
         labels = {
             "last_date": "Last Date",

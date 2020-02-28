@@ -6,28 +6,72 @@
 
 {% block content %}
 
+
     <section class="job-form-section job-form-section--image">
         <div class="container">
+            <div class="row search_specific">
+                    <button style="background: white; color:gray; border: none; margin-left: 1px;" class="btn btn-primary btnjob">
+                     Find a Job</button>
+                    <button  class="btn btn-primary btncandidate">Find a Candidate</button>
+                    <script>
+                    $(document).ready(function(){
+                    $(".btnjob").click(function(){location.href = "{% url 'jobs:home' %}";
+                        $(".btnjob").css("background", "white");
+                        $(".btnjob").css("color", "gray");
+                        $(".btncandidate").css("color", "white");
+                        $(".btncandidate").css("background", "black");
+                        $(".btnjob").css("border", "none");
+                        $(".job-form-box2").css("display", "none");
+                        $(".job-form-box1").css("display", "block");
+
+                    });
+                    $(".btncandidate").click(function(){location.href = "{% url 'jobs:home1' %}";
+                        $(".btnjob").css("background", "black");
+                        $(".btnjob").css("color", "white");
+                        $(".btncandidate").css("color", "gray");
+                        $(".btncandidate").css("background", "white");
+                        $(".btncandidate").css("border", "none");
+                        $(".job-form-box1").css("display", "none");
+                        $(".job-form-box2").css("display", "block");
+                    });
+                    });
+                    </script>
+                    <style>
+                    .search_specific{
+                        margin-left: 265px;
+                        margin-bottom: -20px;
+                        margin-top: 70px;
+                    }
+                    /* .search_specific .btn-primary:hover{
+                        background: white;
+                        color: black;
+                        border: none;            
+                    } */
+
+                    .search_specific .btn-primary{
+                        height: 45px;
+                        width: 200px;
+                        font-size: 16px;
+                        
+                    }
+                    
+                    </style>
+            </div>
+
             <div class="row main-search">
                 <div class="col-lg-8 mx-auto">
-                    <div class="job-form-box">
-                        <!-- main search bar styles -->
-                        <form id="job-main-form" method="get" action="{% url 'jobs:searh' %}" class="job-main-form">
+                    <div class="job-form-box1">
+                        <form id="job-main-form" method="get" action="{% url 'jobs:search' %}" class="job-main-form">
                             <div class="controls">
                                 <div class="row align-items-center">
                                     <div class="col-md-3">
-                                        <div class="form-group">                                          
-                                            <!-- <input class="dropbtn1" type="text" id="location" name="location"
-                                                   placeholder="&emsp;Any particular location?" class=""> -->
-                                            <select name="location" class="dropbtn1">
-                                                <option selected disabled>Location</option>
-                                                <option>Delhi</option>
-                                                <option>Mumbai</option>
-                                                <option>Pune</option>
-                                                <option>Jaipur</option>
-                                                <option>Indore</option>
-                                                <option>Banglore</option>
-                                                <option>Others</option>
+                        <div class="form-group">                                          
+                             <select aria-placeholder="Position you are looking for" name="position" class="dropbtn1">
+                                                <option selected disabled>Select Position</option>
+                                                {% for instance in object_list %}
+                                                 <option value="{{ instance.title }}">
+                                                  <p> <a href='{{ instance.get_absolute_url }}'>{{ instance.title }}</a></p>
+                                                </option>{% endfor %}
                                             </select>
                                         </div>
                                         <style>
@@ -41,7 +85,7 @@
                                               display: inline-block;
                                               border: none;
                                               height: 3.5em;
-                                              width: 9em;
+                                              width: 20em;
                                               -webkit-appearance: none;
                                               padding-left: 1.7em;
                                               margin-left: 0.4em;
@@ -57,10 +101,15 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="text" id="profession" name="position"
-                                                   placeholder="&emsp;Position you are looking for" class="">
-                                    <style>
-                                        #profession{
+                                          <!---  <label for="location">Location</label>--->
+                                            <select aria-placeholder="location" name="location" class="dropbtn2">
+                                                <option selected disabled>Select Location</option>
+                                                {% for instance in object_list %}<option>
+                                                <p> <a href='{{ instance.get_absolute_url }}'>{{ instance.location }}</a></p>
+                                                </option>{% endfor %}
+                                            </select>
+                                           <style>
+                                        .dropbtn2{
                                             border: none;
                                             padding: 1em;
                                             height: 3.5em ;
@@ -69,9 +118,10 @@
                                             padding-left: 1em;
                                             font-size: 1em;
                                             position: relative;
+                                            background-color: white;
                                         }
                                         @media screen and (max-width: 415px){
-                                                #profession{
+                                               .dropbtn2{
                                                     width: 17em;
                                                     float: right;
                                                 }
@@ -79,22 +129,27 @@
                                     </style>
                                         </div>
                                     </div>
-                                        <div class="col-md-3">
                                         <div class="form-group">                                           
                                             <!-- <input class="dropbtn" type="text" id="experience" name="experience"
                                                    placeholder="&emsp;Experience" class=""> -->
                                                 <select name="experience" id="experience"   class="dropbtn">Experience
                                                     <option selected disabled>Experience</option>
-                                                    <option>0-1</option>
+                                                    <option>All</option>
+                                                    <option>0-4</option>
                                                     <option>1-2</option>
-                                                    <option>2-4</option>
-                                                    <option>4-6</option>
-                                                    <option>6-8</option>
-                                                    <option>8-12</option>
+                                                    <option>2-3</option>
+                                                    <option>3-4</option>
+                                                    <option>4-5</option>
+                                                    <option>5-6</option>
+                                                    <option>6-7</option>
+                                                    <option>7-8</option>
+                                                    <option>8-9</option>
+                                                    <option>9-10</option>
+                                                    <option>10-11</option>
+                                                    <option>11-12</option>
                                                     <option>12+</option>
                                                 </select>
-                                           </div>
-                                           <style>
+                                          <style>
                                             .dropbtn {
                                               background-color: white;
                                               padding: 1em;
@@ -118,13 +173,13 @@
                                                 }
                                             } 
                                             </style>
-                                    </div>
+                                           </div>
                                     <div class="col-md-2">
                                         <button type="submit"
                                                 class="main_search">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                        <style>
+                                         <style>
                                             .main_search{
                                                 height: 3.5em;
                                                 padding: 1em;
@@ -159,9 +214,166 @@
                             </div>
                         </form>
                     </div>
+                
+                   <div style="display: none;" class="job-form-box2">
+                        <form id="job-main-form" method="get" action="{% url 'jobs:search1' %}" class="job-main-form">
+                            <div class="controls">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                     <div class="form-group">                                          
+                                       <select aria-placeholder="Position you are looking for" name="position" class="dropbtn3">
+                                                <option selected disabled>Select Position</option>
+                                                {% for instance in object_list %}
+                                                 <option value="{{ instance.job_title }}">
+                                                  <p> <a href='{{ instance.get_absolute_url }}'>{{ instance.job_title }}</a></p>
+                                                </option>{% endfor %}
+                                            </select>
+                                        </div>
+                                        <style>
+                                            .dropbtn3 {
+                                              background-color: white;
+                                              color:black;
+                                              padding: 1em;
+                                              font-size: 1em;
+                                              cursor: pointer;
+                                              position: relative;
+                                              display: inline-block;
+                                              border: none;
+                                              height: 3.5em;
+                                              width: 20em;
+                                              -webkit-appearance: none;
+                                              padding-left: 1.7em;
+                                              margin-left: 0.4em;
+                                              color: gray;
+                                            }
+                                            @media screen and (max-width: 415px){
+                                                .dropbtn3{
+                                                    width: 17em;
+                                                    float: right;
+                                                }
+                                            }
+                                            </style>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                          <!---  <label for="location">Location</label>--->
+                                            <select aria-placeholder="location" name="location" class="dropbtn4">
+                                                <option selected disabled>Select Location1</option>
+                                                {% for instance in object_list %}<option>
+                                                <p> <a href='{{ instance.get_absolute_url }}'>{{ instance.location1 }}</a></p>
+                                                </option>{% endfor %}
+                                            </select>
+                                           <style>
+                                        .dropbtn4{
+                                            border: none;
+                                            padding: 1em;
+                                            height: 3.5em ;
+                                            width: 20em ;
+                                            margin-left: -3.17em;
+                                            padding-left: 1em;
+                                            font-size: 1em;
+                                            position: relative;
+                                            background-color: white;
+                                        }
+                                        @media screen and (max-width: 415px){
+                                               .dropbtn4{
+                                                    width: 17em;
+                                                    float: right;
+                                                }
+                                            }
+                                    </style>
+                                        </div>
+                                    </div>
+                                        <div class="form-group">                                           
+                                            <!-- <input class="dropbtn" type="text" id="experience" name="experience"
+                                                   placeholder="&emsp;Experience" class=""> -->
+                                                <select name="experience" id="experience"   class="dropbtn5">Experience
+                                                    <option selected disabled>Experience</option>
+                                                    <option>All</option>
+                                                    <option>0-1</option>
+                                                    <option>1-2</option>
+                                                    <option>2-3</option>
+                                                    <option>3-4</option>
+                                                    <option>4-5</option>
+                                                    <option>5-6</option>
+                                                    <option>6-7</option>
+                                                    <option>7-8</option>
+                                                    <option>8-9</option>
+                                                    <option>9-10</option>
+                                                    <option>10-11</option>
+                                                    <option>11-12</option>
+                                                    <option>12+</option>
+                                                </select>
+                                          <style>
+                                            .dropbtn5 {
+                                              background-color: white;
+                                              padding: 1em;
+                                              font-size: 1em;
+                                              cursor: pointer;
+                                              width: 10em;                                              
+                                              position: relative;
+                                              display: inline-block;
+                                              border: none;
+                                              height: 3.5em;
+                                              -webkit-appearance: none;
+                                              margin-left: -1.3em;
+                                              padding-left: 1.2em;
+                                              color: gray;
+                                              
+                                            }
+                                            @media screen and (max-width: 415px){
+                                                .dropbtn5{
+                                                    width: 17em;
+                                                    float: right;
+                                                }
+                                            } 
+                                            </style>
+                                           </div>
+                                   <div class="col-md-2">
+                                        <button type="submit"
+                                                class="main_search">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                         <style>
+                                            .main_search{
+                                                height: 3.5em;
+                                                padding: 1em;
+                                                width: 80px;
+                                                background: white;
+                                                border: none;
+                                                margin-top: -16px;
+                                                margin-left: -3.9em;
+                                                position: relative;
+                                            }
+                                            .main_search:hover{background:black;}
+                                            .fa-search{
+                                                font-size: 1.5em;
+                                                position: relative;
+                                                margin-left: 10px;
+                                                color: gray;
+                                            }
+                                            @media screen and (max-width: 415px){
+                                                .main_search{
+                                                    width: 17em;
+                                                    float: right;
+                                                    background: gray;
+                                                    margin-top: 0px;
+                                                }
+                                                .fa-search{
+                                                    color: black;
+                                                }
+                                            }
+                                        </style>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </div>                
+
     </section>
     <section class="bg-light-gray">
         <div class="container">
@@ -224,7 +436,7 @@
                             </div>
                         </div>
                         <div class="col-10 col-md-3 col-lg-2 ml-auto"><i class="fa fa-map-marker job__location"></i>
-                            {{ trending.location }}
+                            {{ Marktine }}
                         </div>
                         <div class="col-10 col-md-3 col-lg-3 ml-auto">
                             <p>Posted {{ trending.created_at|timesince }}</p>
@@ -242,6 +454,7 @@
             {% endfor %}
         </div>
     </section>
+<div style="background: gray; color: white;" class="footer__copyright">
     <section style="background-image: url({% static 'img/startup.jpg' %}); " class="section-divider">
         <div class="overlay"></div>
         <div class="container">

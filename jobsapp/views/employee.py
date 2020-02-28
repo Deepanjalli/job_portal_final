@@ -4,7 +4,8 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
 
-from accounts.forms import EmployeeProfileUpdateForm
+from accounts.forms import *
+from ..forms import *
 from accounts.models import User
 from jobsapp.decorators import user_is_employee
 

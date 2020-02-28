@@ -7,31 +7,22 @@
 {% block content %}
 
     <section class="job-form-section job-form-section--compressed">
-        <div class="container">
+ <div class="col-lg-8 mx-auto">
+ <div class="container">
             <div class="row main-search">
-                <div class="col-lg-8 mx-auto">
-                    <div class="job-form-box">                        
-                        <form id="job-main-form" method="get" action="{% url 'jobs:searh' %}" class="job-main-form">
+
+       <div class="job-form-box1">
+                        <form id="job-main-form" method="get" action="#" class="job-main-form">
                             <div class="controls">
                                 <div class="row align-items-center">
                                     <div class="col-md-3">
-                                        <div class="form-group">                                          
-                                            <!-- <input class="dropbtn1" type="text" id="location" name="location"
-                                                   placeholder="&emsp;Any particular location?" class=""> -->
-                                            <select name="location" class="dropbtn1">
-                                                <option selected disabled>Location</option>
-                                                <option>Delhi</option>
-                                                <option>Mumbai</option>
-                                                <option>Pune</option>
-                                                <option>Jaipur</option>
-                                                <option>Indore</option>
-                                                <option>Banglore</option>
-                                                <option>Others</option>
-                                            </select>
-                                        </div>
+                        <div class="form-group">                                          
+                              <input type="text" id="position" name="position"
+                                   placeholder="Position you are looking for" class="form-control">
+                        </div>
                                         <style>
-                                            .dropbtn1 {
-                                              background-color: white;
+                                            #position {
+                                                background-color: white;
                                               color:black;
                                               padding: 1em;
                                               font-size: 1em;
@@ -47,7 +38,7 @@
                                               color: gray;
                                             }
                                             @media screen and (max-width: 415px){
-                                                .dropbtn1{
+                                                #position{
                                                     width: 17em;
                                                     float: right;
                                                 }
@@ -56,11 +47,12 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <input type="text" id="profession" name="position"
-                                                   placeholder="&emsp;Position you are looking for" class="">
-                                    <style>
-                                        #profession{
-                                            border: none;
+                                          <!---  <label for="location">Location</label>--->
+                                          <input type="text" id="location" name="location" placeholder="Any particular location?"
+                                   value="" class="form-control">
+                                           <style>
+                                        #location{
+                                         border: none;
                                             padding: 1em;
                                             height: 3.5em ;
                                             width: 20em ;
@@ -70,7 +62,7 @@
                                             position: relative;
                                         }
                                         @media screen and (max-width: 415px){
-                                                #profession{
+                                               #location{
                                                     width: 17em;
                                                     float: right;
                                                 }
@@ -78,24 +70,29 @@
                                     </style>
                                         </div>
                                     </div>
-                                        <div class="col-md-3">
                                         <div class="form-group">                                           
                                             <!-- <input class="dropbtn" type="text" id="experience" name="experience"
                                                    placeholder="&emsp;Experience" class=""> -->
                                                 <select name="experience" id="experience"   class="dropbtn">Experience
                                                     <option selected disabled>Experience</option>
+                                                    <option>All</option>
                                                     <option>0-1</option>
                                                     <option>1-2</option>
-                                                    <option>2-4</option>
-                                                    <option>4-6</option>
-                                                    <option>6-8</option>
-                                                    <option>8-12</option>
+                                                    <option>2-3</option>
+                                                    <option>3-4</option>
+                                                    <option>4-5</option>
+                                                    <option>5-6</option>
+                                                    <option>6-7</option>
+                                                    <option>7-8</option>
+                                                    <option>8-9</option>
+                                                    <option>9-10</option>
+                                                    <option>10-11</option>
+                                                    <option>11-12</option>
                                                     <option>12+</option>
                                                 </select>
-                                           </div>
-                                           <style>
+                                          <style>
                                             .dropbtn {
-                                              background-color: white;
+                                                  background-color: white;
                                               padding: 1em;
                                               font-size: 1em;
                                               cursor: pointer;
@@ -117,13 +114,13 @@
                                                 }
                                             } 
                                             </style>
-                                    </div>
+                                           </div>
                                     <div class="col-md-2">
                                         <button type="submit"
                                                 class="main_search">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                        <style>
+                                         <style>
                                             .main_search{
                                                 height: 3.5em;
                                                 padding: 1em;
@@ -171,17 +168,15 @@
                         <div class="col-md-12 col-lg-6">
                             <div class="row">
                                 <div class="col-2">
-                                    <img src="{% static 'img/company.png' %}"
-                                         class="img-fluid">
+                                    <img src="{% static 'img/company-1.png' %}"
+                                         alt="Ipsioou " class="img-fluid">
                                 </div>
                                 <div class="col-10">
                                     <h4 class="job__title"><a
                                             href="{% url 'jobs:jobs-detail' job.id %}">{{ job.title }}</a></h4>
                                     <p class="job__company">
-                                        {{ job.company_name }}
-                                    </p><br>
-                                    <p class="job__experience">
-                                        {{ job.experience }}
+                                        {{ job.company_name }}<br>
+                                        <p>{{ job.experience }}</p>
                                     </p>
                                 </div>
                             </div>

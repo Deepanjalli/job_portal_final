@@ -5,7 +5,11 @@ from django.views.generic import CreateView, FormView, RedirectView
 from accounts.forms import *
 from accounts.models import User
 
+from django.core.files.storage import FileSystemStorage
 
+
+  
+  
 class RegisterEmployeeView(CreateView):
     model = User
     form_class = EmployeeRegistrationForm
@@ -30,10 +34,10 @@ class RegisterEmployeeView(CreateView):
             password = form.cleaned_data.get("password1")
             user.set_password(password)
             user.save()
+            messages.success(request, 'You are now registered')
             return redirect('accounts:login')
         else:
             return render(request, 'accounts/employee/register.html', {'form': form})
-
 
 class RegisterEmployerView(CreateView):
     model = User
@@ -52,13 +56,13 @@ class RegisterEmployerView(CreateView):
 
     def post(self, request, *args, **kwargs):
 
-        form = self.form_class(data=request.POST)
-
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             password = form.cleaned_data.get("password1")
             user.set_password(password)
             user.save()
+            messages.success(request, 'You are now registered')
             return redirect('accounts:login')
         else:
             return render(request, 'accounts/employer/register.html', {'form': form})

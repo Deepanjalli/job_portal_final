@@ -6,39 +6,166 @@
 
 {% block content %}
 
-    <section class="job-form-section job-form-section--compressed">
-        <div class="container">
-            <h4 class="heading">Find a job you will love</h4>
-            <form id="job-main-form" method="get" action="#" class="job-main-form">
-                <div class="controls">
-                    <div class="row align-items-end">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-3 col-md-3 form-group">
-                            <label for="profession">Profession</label>
-                            <input type="text" id="profession" name="profession"
-                                   placeholder="Profession you are looking for" class="form-control">
-                        </div>
-                        <div class="col-sm-3 col-md-3 form-group">
-                            <label for="location">Location</label>
-                            <input type="text" id="location" name="location" placeholder="Any particular location?"
-                                   value="Bay Area" class="form-control">
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="experience">Experience</label>
-                                <input type="text" id="experience" name="experience"
-                                       placeholder="Your Experience" class="form-control">
+   <section class="job-form-section job-form-section--compressed">
+ <div class="col-lg-8 mx-auto">
+ <div class="container">
+            <div class="row main-search">
+
+       <div class="job-form-box1">
+                        <form id="job-main-form" method="get" action="{% url 'jobs:search' %}" class="job-main-form">
+                            <div class="controls">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                        <div class="form-group">                                          
+                             <select aria-placeholder="Position you are looking for" name="position" class="dropbtn1">
+                                                <option selected disabled>Select Position</option>
+                                                {% for instance in object_list %}
+                                                 <option value="{{ instance.title }}">
+                                                  <p> <a href='{{ instance.get_absolute_url }}'>{{ instance.title }}</a></p>
+                                                </option>{% endfor %}
+                                            </select>
+                                        </div>
+                                        <style>
+                                            .dropbtn1 {
+                                                background-color: white;
+                                              color:black;
+                                              padding: 1em;
+                                              font-size: 1em;
+                                              cursor: pointer;
+                                              position: relative;
+                                              display: inline-block;
+                                              border: none;
+                                              height: 3.5em;
+                                              width: 9em;
+                                              -webkit-appearance: none;
+                                              padding-left: 1.7em;
+                                              margin-left: 0.4em;
+                                              color: gray;
+                                            }
+                                            @media screen and (max-width: 415px){
+                                                .dropbtn1{
+                                                    width: 17em;
+                                                    float: right;
+                                                }
+                                            }
+                                            </style>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                          <!---  <label for="location">Location</label>--->
+                                            <select aria-placeholder="location" name="location" class="dropbtn2">
+                                                <option selected disabled>Select Location</option>
+                                                {% for instance in object_list %}<option>
+                                                <p> <a href='{{ instance.get_absolute_url }}'>{{ instance.location }}</a></p>
+                                                </option>{% endfor %}
+                                            </select>
+                                           <style>
+                                        .dropbtn2{
+                                         border: none;
+                                            padding: 1em;
+                                            height: 3.5em ;
+                                            width: 20em ;
+                                            margin-left: -3.17em;
+                                            padding-left: 1em;
+                                            font-size: 1em;
+                                            position: relative;
+                                        }
+                                        @media screen and (max-width: 415px){
+                                               .dropbtn2{
+                                                    width: 17em;
+                                                    float: right;
+                                                }
+                                            }
+                                    </style>
+                                        </div>
+                                    </div>
+                                        <div class="form-group">                                           
+                                            <!-- <input class="dropbtn" type="text" id="experience" name="experience"
+                                                   placeholder="&emsp;Experience" class=""> -->
+                                                <select name="experience" id="experience"   class="dropbtn">Experience
+                                                    <option selected disabled>Experience</option>
+                                                    <option>All</option>
+                                                    <option>0-1</option>
+                                                    <option>1-2</option>
+                                                    <option>2-3</option>
+                                                    <option>3-4</option>
+                                                    <option>4-5</option>
+                                                    <option>5-6</option>
+                                                    <option>6-7</option>
+                                                    <option>7-8</option>
+                                                    <option>8-9</option>
+                                                    <option>9-10</option>
+                                                    <option>10-11</option>
+                                                    <option>11-12</option>
+                                                    <option>12+</option>
+                                                </select>
+                                          <style>
+                                            .dropbtn {
+                                                  background-color: white;
+                                              padding: 1em;
+                                              font-size: 1em;
+                                              cursor: pointer;
+                                              width: 10em;                                              
+                                              position: relative;
+                                              display: inline-block;
+                                              border: none;
+                                              height: 3.5em;
+                                              -webkit-appearance: none;
+                                              margin-left: -1.3em;
+                                              padding-left: 1.2em;
+                                              color: gray;
+                                              
+                                            }
+                                            @media screen and (max-width: 415px){
+                                                .dropbtn{
+                                                    width: 17em;
+                                                    float: right;
+                                                }
+                                            } 
+                                            </style>
+                                           </div>
+                                    <div class="col-md-2">
+                                        <button type="submit"
+                                                class="main_search">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                         <style>
+                                            .main_search{
+                                                height: 3.5em;
+                                                padding: 1em;
+                                                width: 80px;
+                                                background: white;
+                                                border: none;
+                                                margin-top: -16px;
+                                                margin-left: -3.9em;
+                                                position: relative;
+                                            }
+                                            .main_search:hover{background:black;}
+                                            .fa-search{
+                                                font-size: 1.5em;
+                                                position: relative;
+                                                margin-left: 10px;
+                                                color: gray;
+                                            }
+                                            @media screen and (max-width: 415px){
+                                                .main_search{
+                                                    width: 17em;
+                                                    float: right;
+                                                    background: gray;
+                                                    margin-top: 0px;
+                                                }
+                                                .fa-search{
+                                                    color: black;
+                                                }
+                                            }
+                                        </style>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-1 col-md-2 form-group">
-                            <button type="submit" name="name"
-                                    class="btn btn-outline-white-primary job-main-form__button">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </section>
     <section>
@@ -50,17 +177,14 @@
                         <div class="col-md-12 col-lg-6">
                             <div class="row">
                                 <div class="col-2">
-                                    <img src="{% static 'img/company.png' %}"
-                                          class="img-fluid">
+                                    <img src="{% static 'img/company-1.png' %}"
+                                         alt="Ipsioou " class="img-fluid">
                                 </div>
                                 <div class="col-10">
                                     <h4 class="job__title"><a
                                             href="{% url 'jobs:jobs-detail' job.id %}">{{ job.title }}</a></h4>
                                     <p class="job__company">
-                                        {{ job.company_name }}
-                                    </p>
-                                    <p class="job__experience">
-                                        {{ job.experience }}
+                                        {{ job.company_name }}                                      
                                     </p>
                                 </div>
                             </div>

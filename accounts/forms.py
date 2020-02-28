@@ -2,9 +2,9 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-
+from PIL import Image
 import unicodedata
-
+from django.core.files import File
 from django import forms
 from django.contrib.auth import (
     authenticate, get_user_model, password_validation,
@@ -21,6 +21,9 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.utils.text import capfirst
 from django.utils.translation import gettext, gettext_lazy as _
+from django.core.files.storage import FileSystemStorage
+from jobsapp.models import *
+
 
 UserModel = get_user_model()
 
@@ -77,14 +80,31 @@ class UsernameField(forms.CharField):
 
 
 
-from accounts.models import User
+from accounts.models import *
+
+from django import forms
+
+
+class HotelForm(forms.ModelForm): 
+ hotel_Main_Img = forms.FileField()
+ class Meta: 
+        model = Hotel 
+        fields = ['name', 'hotel_Main_Img'] 
 
 GENDER_CHOICES = (
     ('male', 'Male'),
     ('female', 'Female'))
 
 
+
+
 class UserCreationForm1(forms.ModelForm):
+    RECRUITER_CHOICES = (
+     ('vendor', 'Vendor'),
+     ('employer', 'Employer')
+    )
+
+
     """
     A form that creates a user, with no privileges, from the given username and
     password.
@@ -93,51 +113,54 @@ class UserCreationForm1(forms.ModelForm):
         'password_mismatch': _("The two password fields didn't match."),
     }
     password1 = forms.CharField(
-        label=_("Password"),
+        label=_(""),
         strip=False,
         widget=forms.PasswordInput,
         help_text=password_validation.password_validators_help_text_html(),
     )
     password2 = forms.CharField(
-        label=_("Password confirmation"),
+        label=_(""),
         widget=forms.PasswordInput,
         strip=False,
-        help_text=_("Enter the same password as before, for verification."),
+        help_text=_(""),
     )
     phone_no = forms.IntegerField(
-        label=_("phone_no"),
-        widget=forms.TextInput,
-        help_text=_("Enter the Contact No."),
+        label=_(""),
+        widget=forms.TextInput(),
+        help_text=_(""),
     )
     founded_by = forms.CharField(
-        label=_("founded_by"),
+        label=_(""),
         widget=forms.TextInput,
         strip=False,
-        help_text=_("Enter in Text format."),
+        help_text=_(""),
     )
     founded_year = forms.CharField(
-        label=_("founded_year"),
-        widget=forms.TextInput,
+        label=_(""),
+        widget=forms.TextInput(),
         strip=False,
-        help_text=_("Enter in Text format."),
+        help_text=_(""),
     )
     website_url = forms.CharField(
-        label=_("website_url"),
+        label=_(""),
         widget=forms.TextInput,
         strip=False,
-        help_text=_("Enter url."),
+        help_text=_(""),
     )
     no_emp = forms.CharField(
-        label=_("no_emp"),
+        label=_(""),
         widget=forms.TextInput,
         strip=False,
-        help_text=_("Enter in Text format."),
+        help_text=_(""),
     )
 
-
-
-
-
+    image1 = forms.FileField(
+       label =_(""),
+    )
+    recruiter = forms.MultipleChoiceField(
+            widget = forms.CheckboxSelectMultiple,
+            choices = RECRUITER_CHOICES
+    )
 
 class EmployeeRegistrationForm(UserCreationForm):
     # gender = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=GENDER_CHOICES)
@@ -213,10 +236,13 @@ class EmployerRegistrationForm(UserCreationForm1):
 
     def __init__(self, *args, **kwargs):
         super(EmployerRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].label = "Company Name"
-        self.fields['last_name'].label = "Company Address"
-        self.fields['password1'].label = "Password"
-        self.fields['password2'].label = "Confirm Password"
+        self.fields['recruiter'].required = True
+        self.fields['recruiter'].label = ""
+        self.fields['first_name'].label = ""
+        self.fields['last_name'].label = ""
+        self.fields['password1'].label = ""
+        self.fields['password2'].label = ""
+        self.fields['email'].label = ""
 
         self.fields['first_name'].widget.attrs.update(
             {
@@ -245,35 +271,35 @@ class EmployerRegistrationForm(UserCreationForm1):
         )
         self.fields['phone_no'].widget.attrs.update(
             {
-                'placeholder': 'enter phone no',
+                'placeholder': 'enter phone_no',
             }
         )
         self.fields['website_url'].widget.attrs.update(
             {
-                'placeholder': 'enter phone no',
+                'placeholder': 'enter website url',
             }
         )
         self.fields['founded_by'].widget.attrs.update(
             {
-                'placeholder': 'enter phone no',
+                'placeholder': 'Founded by',
             }
         )
 
         self.fields['founded_year'].widget.attrs.update(
             {
-                'placeholder': 'enter phone no',
+                'placeholder': 'Founded Year',
             }
         )
         self.fields['no_emp'].widget.attrs.update(
             {
-                'placeholder': 'enter phone no',
+                'placeholder': 'No. of employee',
             }
         )
 
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'email', 'password1', 'password2','phone_no','website_url','founded_by','founded_year','no_emp','recruiter','image1']
         error_messages = {
             'first_name': {
                 'required': 'First name is required',
@@ -327,28 +353,22 @@ class UserLoginForm(forms.Form):
         return self.user
 
 
-
 class Profile_update_form(forms.ModelForm):
     middle_name = forms.CharField(
-        label=_("middle_name"),
+        label=_("job_title"),
         widget=forms.TextInput,
         strip=False,
         help_text=_("Enter in Text format."),
     )
+
     job_title = forms.CharField(
         label=_("job_title"),
         widget=forms.TextInput,
         strip=False,
         help_text=_("Enter in Text format."),
     )
-    tot_exp_yr = forms.CharField(
+    experience1 = forms.CharField(
         label=_("tot_exp_yr"),
-        widget=forms.TextInput,
-        strip=False,
-        help_text=_("Enter in Text format."),
-    )
-    tot_exp_mon = forms.CharField(
-        label=_("tot_exp_mon"),
         widget=forms.TextInput,
         strip=False,
         help_text=_("Enter in Text format."),
@@ -434,92 +454,111 @@ class Profile_update_form(forms.ModelForm):
 
 
 
+class Profile_update_form(forms.ModelForm):
+    middle_name = forms.CharField(
+        label=_("middle_name"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    job_title = forms.CharField(
+        label=_("job_title"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    experience1 = forms.CharField(
+        label=_("tot_exp_yr"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    dob_city = forms.CharField(
+        label=_("dob_city"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    dob_state = forms.CharField(
+        label=_("dob_state"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    dob_country = forms.CharField(
+        label=_("dob_country"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+
+    dob = forms.CharField(
+        label=_("dob"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+
+    address = forms.CharField(
+        label=_("address"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+
+    location1 = forms.CharField(
+        label=_("city"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    state = forms.CharField(
+        label=_("state"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    country = forms.CharField(
+        label=_("country"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    pin = forms.CharField(
+        label=_("pin"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    tel = forms.CharField(
+        label=_("tel"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    mob = forms.CharField(
+        label=_("mob"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+    email = forms.CharField(
+        label=_("email"),
+        widget=forms.TextInput,
+        strip=False,
+        help_text=_("Enter in Text format."),
+    )
+
+
+
+
+
+
 class EmployeeProfileUpdateForm(Profile_update_form):
 
     def __init__(self, *args, **kwargs):
         super(EmployeeProfileUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter First Name',
-            }
-        )
-        self.fields['last_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['middle_name'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['job_title'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['tot_exp_yr'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-
-        self.fields['tot_exp_mon'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['dob_city'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['dob_state'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['dob'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['address'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['city'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['state'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['country'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['pin'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['tel'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-        self.fields['mob'].widget.attrs.update(
-            {
-                'placeholder': 'Enter Last Name',
-            }
-        )
-
+ 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "gender","middle_name","job_title","tot_exp_yr","tot_exp_mon","dob_city","dob_state","dob","address","city","state","country","pin","tel","mob"]
+        fields = ["first_name", "middle_name","last_name", "gender","job_title","experience1","dob_city","dob_state","dob","address","location1","state","country","pin","tel","mob"]

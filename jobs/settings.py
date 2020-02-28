@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'jobsapp',
     'accounts',
+
+   
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}
+    Employer Register
+{% endblock %}
+
+{% block content %}
+
+
+ <div class="container">
+       <div style="justify-content: center; border: 2px solid gray; height: 80px; margin-top: 10px; padding-top: 10px;" class="row">
+        <h3 class="heading">New account</h3>
+       </div>
+   
+          
+
+<div style = "border: 2px solid gray; margin-top: 5px; " class="row">
+        <div style="padding-left: 135px;" class="col-md-12">            
+      
+<h2>Select a file to upload</h2>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul class=flashes>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+<form method="post" action="/" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="file" name="file" autocomplete="off" required>
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Submit">
+	</p>
+</form>
+</div>
+</div>
+
+
+{% endblock %}

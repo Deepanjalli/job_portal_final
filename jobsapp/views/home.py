@@ -4,8 +4,8 @@ from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, CreateView
-
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from accounts.models import *
 from ..forms import ApplyJobForm
 from ..models import Job, Applicant
 
@@ -16,7 +16,7 @@ class HomeView(ListView):
     context_object_name = 'jobs'
 
     def get_queryset(self):
-        return self.model.objects.all()[:6]
+        return self.model.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -24,27 +24,79 @@ class HomeView(ListView):
         return context
 
 
+
+class HomeView1(ListView):
+    model = User
+    template_name = 'home1.html'
+    context_object_name = 'jobs'
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
+
+
 class AboutView(ListView):
     model = Job
     template_name = 'about.html'
     context_object_name = 'jobs'
 
-class ContactView(ListView):
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['trendings'] = self.model.objects.filter(created_at__month=timezone.now().month)[:3]
+        return context
+    
+
+class ContactView(TemplateView):
     model = Job
     template_name = 'contact.html'
     context_object_name = 'jobs'
 
-  
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['trendings'] = self.model.objects.filter(created_at__month=timezone.now().month)[:3]
+        return context
+
 
 class SearchView(ListView):
-    model = Job
-    template_name = 'jobs/search.html'
-    context_object_name = 'jobs'
-
-    def get_queryset(self):
-        return self.model.objects.filter(location__contains=self.request.GET['location'],
+ model = Job
+ template_name = 'jobs/search.html'
+ context_object_name = 'jobs'
+ def get_queryset(self):
+  exp=self.request.GET['experience']
+  if exp=="All":
+   exp="0-100"
+  if exp=="12+":
+   exp="12-100"
+  exp_min,exp_max=exp.split('-', 1 )
+  exp_min=int(exp_min)
+  exp_max=int(exp_max)
+  return self.model.objects.filter(location__contains=self.request.GET['location'],
                                          title__contains=self.request.GET['position'],
-                                         experience__contains=self.request.GET['experience'])
+                                         experience__range=(exp_min, exp_max))
+
+
+class SearchView1(ListView):
+ model = User
+ template_name = 'jobs/search1.html'
+ context_object_name = 'jobs'
+ def get_queryset(self):
+  exp=self.request.GET['experience']
+  if exp=="All":
+   exp="0-100"
+  if exp=="12+":
+   exp="12-100"
+  exp_min,exp_max=exp.split('-', 1 )
+  exp_min=int(exp_min)
+  exp_max=int(exp_max)
+  return self.model.objects.filter(location1__contains=self.request.GET['location'],
+                                   job_title__contains=self.request.GET['position'],
+                                   experience1__range=(exp_min, exp_max))
 
 
 class JobListView(ListView):

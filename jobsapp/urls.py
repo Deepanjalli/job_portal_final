@@ -1,14 +1,15 @@
 from django.urls import path, include
-
 from .views import *
 
 app_name = "jobs"
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
+    path('home1', HomeView1.as_view(), name='home1'),
     path('about', AboutView.as_view(), name='about'),
     path('contact', ContactView.as_view(), name='contact'),
-    path('search', SearchView.as_view(), name='searh'),
+    path('search', SearchView.as_view(), name='search'),
+    path('search1', SearchView1.as_view(), name='search1'),
     path('employer/dashboard/', include([
         path('', DashboardView.as_view(), name='employer-dashboard'),
         path('all-applicants', ApplicantsListView.as_view(), name='employer-all-applicants'),
